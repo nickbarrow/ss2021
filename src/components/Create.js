@@ -1,17 +1,22 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { createGroup } from '../utils/firebase'
 import { Link, useNavigate } from "react-router-dom"
 import { BsFillArrowLeftCircleFill, BsPlusCircle } from 'react-icons/bs'
 
 export default function Create (props) {
   var nameRef = useRef(null)
+  var codeRef = useRef(null)
   const navigate = useNavigate()
+  const [isPrivate, togglePrivate] = useState(false)
 
   const create = async () => {
     if (nameRef.current.value) {
+      let p = {}
+      if(isPrivate && codeRef.current.value) p = { isPrivate: 'true', privateCode: codeRef.current.value }
       let docRef = await createGroup({
         name: nameRef.current.value,
-        members: [props.user.uid]
+        members: [{ uid: props.user.uid }],
+        ...p
       })
       navigate(`/group/${docRef.id}`)
     }
@@ -31,8 +36,20 @@ export default function Create (props) {
       </div>
 
       <div className='input'>
-        <label>Group Name:</label>
-        <input ref={nameRef} />
+        <label>
+          Group Name:
+          <input id="groupName" ref={nameRef} />
+        </label>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ display: 'inline', fontSize: '5vw', marginRight: '10px' }}>Private?</span>
+          <input type="checkbox" onChange={(e) => { togglePrivate(e.target.checked) }} style={{ width: '5vw', height: '5vw' }} />
+        </div>
+        {isPrivate ? (
+          <>
+            <label for='privateCode'>{'Private group key (other players will use this to enter):'}</label>
+            <input id='privateCode' ref={codeRef} type="num" max="9999" />
+          </>
+        ) : null}
       </div>
 
       <button className='btn' onClick={create}>Go</button>

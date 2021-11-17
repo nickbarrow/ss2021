@@ -1,0 +1,30 @@
+@function calculateTypeOffset($lh, $fontSize, $descenderHeightScale) {
+  $lineHeightScale: $lh / $fontSize;
+  @return ($lineHeightScale - 1) / 2 + $descenderHeightScale;
+}
+
+@mixin basekick($typeSizeModifier, $baseFontSize, $descenderHeightScale, $typeRowSpan, $gridRowHeight, $capHeight) {
+  $fontSize: $typeSizeModifier * $baseFontSize;
+  $lineHeight: $typeRowSpan * $gridRowHeight;
+  $typeOffset: calculateTypeOffset($lineHeight, $fontSize, $descenderHeightScale);
+  $topSpace: $lineHeight - $capHeight * $fontSize;
+  $heightCorrection: 0;
+  
+  @if $topSpace > $gridRowHeight {
+    $heightCorrection: $topSpace - ($topSpace % $gridRowHeight);
+  }
+  
+  $preventCollapse: 1;
+  
+  font-size: #{$fontSize}px;
+  line-height: #{$lineHeight}px;
+  transform: translateY(#{$typeOffset}em);
+  padding-top: $preventCollapse;
+
+  &::before {
+    content: "";
+    margin-top: #{-($heightCorrection + $preventCollapse)}px;
+    display: block;
+    height: 0;
+  }
+}

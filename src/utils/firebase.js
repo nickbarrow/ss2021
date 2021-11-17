@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, doc, addDoc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore'
+import { getFirestore, doc, addDoc, setDoc, getDoc, getDocs, collection, updateDoc } from 'firebase/firestore'
 import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
@@ -18,17 +18,22 @@ const auth = getAuth(app);
 const firestore = getFirestore(app);
 
 
-// Get all groups.
+// CREATE group
+const createGroup = async (group) => {
+  return await addDoc(collection(firestore, 'groups'), group)
+}
+
+// RETRIEVE groups
 const getGroups = async () => {
   const groupsSnap = await getDocs(collection(firestore, 'groups'))
   var groups = []
     groupsSnap.forEach(doc => {
-      groups.push({...doc.data(), title: doc.id})
+      groups.push({...doc.data(), id: doc.id})
     })
   return groups
 }
 
-// Get group data.
+// RETRIEVE group
 const getGroup = async (id) => {
   const groupSnap = await getDoc(doc(firestore, 'groups', id))
   if (groupSnap.exists())
@@ -36,9 +41,12 @@ const getGroup = async (id) => {
   else return null
 }
 
-// Save a map to firestore.
-const createGroup = async (group) => {
-  return await addDoc(collection(firestore, 'groups'), group)
+// UPDATE group
+const joinGroup = async (g, uid) => {
+  let groupDoc = doc(firestore, 'groups', g.id)
+  await updateDoc(groupDoc, {
+    members: [...g.members, uid]
+  })
 }
 
-export { auth, firestore, getGroups, getGroup, createGroup }
+export { auth, firestore, getGroups, getGroup, createGroup, joinGroup }

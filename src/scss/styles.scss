@@ -1,4 +1,8 @@
+@import './mixins/basekick.scss';
+
 $lightDropShadow: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+
+* { box-sizing: border-box; }
 
 body {
   padding: 0;
@@ -14,6 +18,8 @@ body {
   position: relative;
   
   h1 {
+    overflow: hidden;
+    line-height: 1;
     font-size: 12vw;
     margin: 0;
     width: fit-content;
@@ -37,14 +43,20 @@ body {
 
   .heading {
     font-size: 12vw;
-    height: 16vw;
-    overflow: hidden;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    word-break: break-all;
 
-    h1 { margin: 0; }
+    h1 {
+      margin: 0;
+
+      svg {
+        font-size: 8vw;
+        margin-right: 10px;
+      }
+    }
 
     .icon {
       font-size: 8vw;
@@ -67,7 +79,6 @@ body {
       width: 100%;
       font-size: 3vw;
       font-weight: 100;
-      margin: 0 10px;
     }
 
     input {

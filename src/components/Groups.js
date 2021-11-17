@@ -1,23 +1,24 @@
 import { useEffect, useState } from 'react'
-import { getGroups } from '../utils/firebase'
+import { getGroups, joinGroup } from '../utils/firebase'
 import { Link } from "react-router-dom"
-import { BsFillArrowLeftCircleFill, BsPlusCircle } from 'react-icons/bs'
+import { BsFillArrowLeftCircleFill, BsPlusCircle, BsLockFill } from 'react-icons/bs'
 
 export default function Groups (props) {
   const [groups, loadGroups] = useState(null)
+  const [modal, toggleModal] = useState(false)
   
   useEffect(() => {
     let getAllGroups = async () => {
-      loadGroups(await getGroups())
-    }
+      loadGroups(await getGroups() ?? []) }
     getAllGroups()
   }, [])
 
-  const joinGroup = (g) => {
-    if ('private' in g && g.private) {
-      
+  const attemptJoinGroup = async (g) => {
+    console.log(g);
+    if ('isPrivate' in g && g.isPrivate === 'true') {
+      // toggleModal(true)
     } else {
-
+      await joinGroup(g, user.uid)
     }
   }
 
@@ -43,12 +44,13 @@ export default function Groups (props) {
         groups.map((group, idx) => {
           return <div className='group' key={idx}>
                     <span>{group.name}</span>
-                    {group.members.includes(props.user.uid) ? (
+                    {group.members.some(m => m.uid === props.user.uid) ? (
                       <Link to={`/group/${group.id}`}>
                         <button className='btn'>View</button>
                       </Link>
                     ) : (
-                      <button className='btn' onClick={() => { joinGroup(group) }}>Join</button>
+                      <button className='btn' onClick={() => { attemptJoinGroup(group) }}>
+                        {group.isPrivate ? <BsLockFill size={14} /> : null} Join</button>
                     )}
                   </div>
         })
@@ -58,6 +60,10 @@ export default function Groups (props) {
         </div>
       )}
       
+
+      <div className={`modal ${modal ? 'active' : ''}`}>
+
+      </div>
     </div>
   )
 }
