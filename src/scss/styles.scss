@@ -1,19 +1,23 @@
+$lightDropShadow: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+
 body {
   padding: 0;
   margin: 0;
+  font-family: 'Kanit', sans-serif;
 }
 
 .App {
   width: 100%;
-  height: 80vh;
+  min-height: 80vh;
   background-color: rgb(155, 37, 37);
   color: white;
   position: relative;
-  font-family: 'Kanit', sans-serif;
   
   h1 {
     font-size: 12vw;
     margin: 0;
+    width: fit-content;
+    filter: $lightDropShadow;
     @media (min-width: 992px) { font-size: 90px; }
   }
 
@@ -22,30 +26,73 @@ body {
     color: rgba(255, 255, 255, 0.85);
     margin: 0;
   }
-
+  
   a {
     text-decoration: none;
+    align-items: center;
+    transition: all ease .2s;
+    &:hover { opacity: 0.8; }
+    &:visited, &:active, &:focus { color: white; }
+  }
+
+  .heading {
+    font-size: 12vw;
+    height: 16vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 { margin: 0; }
+
+    .icon {
+      font-size: 8vw;
+      position: relative;
+      top: 15px;
+      right: 15px;
+      cursor: pointer;
+      filter: $lightDropShadow;
+      &:hover { opacity: 0.5; }
+    }
+  }
+
+  .input {
+    margin: 10px 0;
+    width: 100%;
+    filter: $lightDropShadow;
+
+    label {
+      display: block;
+      width: 100%;
+      font-size: 3vw;
+      font-weight: 100;
+      margin: 0 10px;
+    }
+
+    input {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      font-size: 4vw;
+      font-weight: 600;
+      margin: 10px 0;
+      padding: 10px 15px;
+    }
   }
 }
 
 .back {
   font-size: 3vw;
   color: white;
+  filter: $lightDropShadow;
   @media (min-width: 992px) { font-size: 30px; }
 
   svg { margin-right: 10px; }
-  
-  a {
-    display: inline-flex;
-    align-items: center;
-    transition: all ease .2s;
-    &:hover { opacity: 0.9; }
-    &:visited { color: white; }
-  }
 }
 
 .page {
-  width: fit-content;
+  width: 80%;
   margin: 0 auto;
   padding-top: 100px;
 
@@ -65,18 +112,35 @@ body {
     transition: box-shadow .15s,transform .15s;
     user-select: none;
     font-size: 5vw;
-    margin: 0 auto;
+    margin: 10px auto;
 
     &:active {
       box-shadow: #D6D6E7 0 3px 7px inset;
       transform: translateY(2px);
     }
+
+    &.trans {
+      background-color: transparent;
+      color: rgb(243, 243, 243);
+      box-shadow: none;
+      font-weight: 500;
+      text-decoration: underline;
+    }
+    
+    &.sm {
+      font-size: 3vw;
+      padding: 5px 10px;
+    }
+
+    &.inline {
+      display: inline-block;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
   }
 }
 
 .home {
-  
-
   h2 {
     margin-bottom: 50px;
     &:after {
@@ -84,12 +148,15 @@ body {
       color: white;
     }
   }
+  
+  .btn {
+    margin-top: 20px;
+  }
 }
 
 .groups {
-  width: 70%;
   .group {
-    padding: 40px 0;
+    margin-top: 40px;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -97,10 +164,41 @@ body {
     justify-content: space-between;
     font-size: 4vw;
 
+    span { filter: $lightDropShadow; }
+
     .btn {
       font-size: 4vw;
       padding: 5px 15px;
       margin: 0;
     }
   }
+}
+
+.footer {
+  width: 100%;
+  height: 20vh;
+  text-align: center;
+  font-family: inherit;
+}
+
+.loading {
+  width: 100%;
+  height: 50px;
+  margin: 50px 0;
+
+  .spinner {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    border-left: 3px solid white;
+    border-top: 3px solid white;
+    border-radius: 50%;
+    transform: rotate(0deg);
+    animation: spin 1s infinite;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

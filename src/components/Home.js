@@ -26,19 +26,15 @@ export default function Home (props) {
         </>
         ) : (
           <>
-            <h1>{props.user.displayName}</h1>
+            <h1 style={{ margin: '0 auto'}}>{props.user.displayName}</h1>
 
             <Link to="/groups">
               <button className='btn'>Find a Group</button>
             </Link>
-
-            <Link to="/create">
-              <button className='btn'>Create a Group</button>
-            </Link>
             
-            <button className='btn'
+            <button className='btn trans'
               onClick={() => { signOut(auth) }}>
-              Logout</button>
+              Log Out</button>
           </>
       )}
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getGroups } from '../utils/firebase'
 import { Link } from "react-router-dom"
-import { BsFillArrowLeftCircleFill } from 'react-icons/bs'
+import { BsFillArrowLeftCircleFill, BsPlusCircle } from 'react-icons/bs'
 
 export default function Groups (props) {
   const [groups, loadGroups] = useState(null)
@@ -13,6 +13,13 @@ export default function Groups (props) {
     getAllGroups()
   }, [])
 
+  const joinGroup = (g) => {
+    if ('private' in g && g.private) {
+      
+    } else {
+
+    }
+  }
 
   return (
     <div className='page groups'>
@@ -22,13 +29,35 @@ export default function Groups (props) {
           <span>Back to Home</span>
         </Link>
       </div>
-      <h1>Groups</h1>
-      {groups && groups.map((group, idx) => {
-        return <div className='group' key={idx}>
-                  <span>{group.title}</span>
-                  <button className='btn'>Join</button>
-                </div>
-      })}
+
+      <div className='heading'>
+        <h1>Groups</h1>
+        <div className='icon'>
+          <Link to='/create'>
+            <BsPlusCircle />
+          </Link>
+        </div>
+      </div>
+      
+      {groups ? (
+        groups.map((group, idx) => {
+          return <div className='group' key={idx}>
+                    <span>{group.name}</span>
+                    {group.members.includes(props.user.uid) ? (
+                      <Link to={`/group/${group.id}`}>
+                        <button className='btn'>View</button>
+                      </Link>
+                    ) : (
+                      <button className='btn' onClick={() => { joinGroup(group) }}>Join</button>
+                    )}
+                  </div>
+        })
+      ) : (
+        <div className='loading'>
+          <div className='spinner'></div>
+        </div>
+      )}
+      
     </div>
   )
 }
