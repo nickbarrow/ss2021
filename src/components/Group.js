@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getGroup } from '../utils/firebase'
+import { getGroup } from '../providers/firebase'
 import { Link, useParams } from "react-router-dom"
 import { BsFillArrowLeftCircleFill, BsShieldLock } from 'react-icons/bs'
 
@@ -8,10 +8,8 @@ export default function Group (props) {
   const [group, loadGroup] = useState(null)
   
   useEffect(() => {
-    let getGroupData = async () => {
-      loadGroup(await getGroup(groupId))
-    }
-    getGroupData()
+    (async () => {
+      loadGroup(await getGroup(groupId)) })()
   }, [])
 
   return (
@@ -43,6 +41,8 @@ export default function Group (props) {
               </ul>
             ) : null}
           </div>
+
+          <button className="btn">Draw Matches</button>
         </>
       ) : null}
     </div>

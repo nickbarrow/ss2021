@@ -45,7 +45,7 @@ const getGroup = async (id) => {
 const joinGroup = async (g, uid) => {
   let groupDoc = doc(firestore, 'groups', g.id)
   await updateDoc(groupDoc, {
-    members: [...g.members, uid]
+    members: [...g.members, { uid }]
   })
 }
 

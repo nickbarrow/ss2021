@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { createGroup } from '../utils/firebase'
+import { createGroup } from '../providers/firebase'
 import { Link, useNavigate } from "react-router-dom"
 import { BsFillArrowLeftCircleFill, BsPlusCircle } from 'react-icons/bs'
 

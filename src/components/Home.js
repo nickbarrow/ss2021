@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { auth } from '../utils/firebase'
+import { auth } from '../providers/firebase'
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth'
 import { Link } from "react-router-dom"
 
