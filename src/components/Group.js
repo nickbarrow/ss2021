@@ -12,6 +12,12 @@ export default function Group (props) {
       loadGroup(await getGroup(groupId)) })()
   }, [])
 
+  const submitWants = (t) => {
+    let g = {...group},
+        tmpUD = g.members.find(m => m.uid === props.user.uid)
+        tmpUD.wants = t
+  }
+
   return (
     <div className='page groups'>
       <div className='back'>
@@ -31,20 +37,30 @@ export default function Group (props) {
             <h2 style={{ fontSize: '6vw', fontWeight: '500' }}>Access Code:{group.privateCode}</h2>
           ) : null}
 
-          <div className='members' style={{ marginTop: '20px' }}>
-            Group Members:
-            {group.members ? (
-              <ul>
-                {group.members.map((memberLol, idx) => {
-                  return <div className='memberLol' key={idx}>{JSON.stringify(memberLol, null, 2)}</div>
-                })}
-              </ul>
-            ) : null}
-          </div>
+          <h3 style={{ fontWeight: '300' }}>To enter the drawing, add some items you'd like to receive:</h3>
+          <textarea></textarea>
+          <button className='btn' onClick={() => { submitWants(wantsRef.current.value) }}>Submit</button>
 
-          <button className="btn">Draw Matches</button>
+          {group.members?.[0].uid === props.user.uid ? (
+            <>
+              <div className='members' style={{ marginTop: '20px' }}>
+                Group Members:
+                <ul>
+                  {group.members.map((memberLol, idx) => {
+                    return <div className='memberLol' key={idx}>{JSON.stringify(memberLol, null, 2)}</div>
+                  })}
+                </ul>
+              </div>
+
+              <button className="btn">Draw Matches</button>
+            </>
+          ) : null}
         </>
-      ) : null}
+      ) : (
+        <div className='loading'>
+          <div className='spinner'></div>
+        </div>
+      )}
     </div>
   )
 }

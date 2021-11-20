@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { getGroups, joinGroup } from '../providers/firebase'
 import { Link, useNavigate } from "react-router-dom"
 import { BsFillArrowLeftCircleFill, BsPlusCircle, BsLockFill } from 'react-icons/bs'
@@ -7,6 +7,8 @@ export default function Groups (props) {
   const navigate = useNavigate()
   const [groups, loadGroups] = useState(null)
   const [modal, toggleModal] = useState(false)
+  const [joiningGroup, setJoiningGroup] = useState(false)
+  var privateGroupCodeInputRef = useRef(null)
   
   useEffect(() => {
     let getAllGroups = async () => {
@@ -14,11 +16,13 @@ export default function Groups (props) {
     getAllGroups()
   }, [])
 
-  const attemptJoinGroup = async (g) => {
-    console.log(g);
-    if ('isPrivate' in g && g.isPrivate === 'true') {
-      // toggleModal(true)
-    } else {
+  const joinPublicGroup = async (g) => {
+    await joinGroup(g, props.user.uid)
+    navigate(`/group/${g.id}`)
+  }
+
+  const joinPrivateGroup = async (g, v) => {
+    if (v === g.privateCode) {
       await joinGroup(g, props.user.uid)
       navigate(`/group/${g.id}`)
     }
@@ -46,14 +50,15 @@ export default function Groups (props) {
         groups.map((group, idx) => {
           return <div className='group' key={idx}>
                     <span>{group.name}</span>
-                    {group.members.some(m => m.uid == props.user.uid) ? (
-                      <Link to={`/group/${group.id}`}>
-                        <button className='btn'>View</button>
-                      </Link>
-                    ) : (
-                      <button className='btn' onClick={() => { attemptJoinGroup(group) }}>
-                        {group.isPrivate ? <BsLockFill size={14} /> : null} Join</button>
-                    )}
+                    {group.members.some(m => m.uid == props.user.uid) ? ( // Already in group
+                        <Link to={`/group/${group.id}`}>
+                          <button className='btn'>View</button>
+                        </Link>
+                      ) : group.isPrivate ? ( // Join private group
+                        <button className='btn' onClick={() => { toggleModal(true); setJoiningGroup(group) }}>
+                          <BsLockFill /> Join</button>
+                      ) : <button className='btn' onClick={() => { joinPublicGroup(group) }}>Join</button>  // Public group
+                    }
                   </div>
         })
       ) : (
@@ -64,7 +69,14 @@ export default function Groups (props) {
       
 
       <div className={`modal ${modal ? 'active' : ''}`}>
-
+        <div className='body'>
+          <h3>Enter secret code:</h3>
+          <input ref={privateGroupCodeInputRef} />
+          <div className='btn-footer'>
+            <button onClick={() => { toggleModal(true); setJoiningGroup(null) }}>Cancel</button>
+            <button onClick={() => { joinPrivateGroup(joiningGroup, privateGroupCodeInputRef.current.value) }}>OK</button>
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -34,6 +34,7 @@ body {
   }
   
   a {
+    color: white;
     text-decoration: none;
     align-items: center;
     transition: all ease .2s;
@@ -181,6 +182,74 @@ body {
       font-size: 4vw;
       padding: 5px 15px;
       margin: 0;
+    }
+  }
+}
+
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .body {
+    width: 60%;
+    background-color: white;
+    text-align: center;
+    color: black;
+    border-radius: 10px;
+    filter: blur(10px 10px);
+    padding: 5vw 0 0 0;
+
+    h3 {
+      font-size: 2rem;
+      font-weight: 500;
+      margin: 0 0 5vw;
+    }
+
+    input {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 2rem;
+      width: 60%;
+    }
+
+    .btn-footer {
+      display: flex;
+      flex-direction: row;
+      border-top: 1px solid #eee;
+      margin-top: 5vw;
+
+      button {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        width: 50%;
+        padding: 1vh 0;
+        cursor: pointer;
+        &:hover {
+          background-color: #eee;
+        }
+        &:first-child {
+          border-right: 1px solid #eee;
+          border-bottom-left-radius: 10px;
+        }
+        &:last-child {
+          border-bottom-right-radius: 10px;
+        }
+      }
     }
   }
 }

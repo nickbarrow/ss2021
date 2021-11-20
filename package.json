@@ -14,7 +14,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently --kill-others \"set PORT=3006 && react-scripts start\" \"sass src/:src/ --watch --no-source-map\""
+    "dev": "concurrently --kill-others \"react-scripts start\" \"sass src/:src/ --watch --no-source-map\""
   },
   "browserslist": {
     "production": [

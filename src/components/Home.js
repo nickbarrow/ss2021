@@ -22,7 +22,7 @@ export default function Home (props) {
           <h2>2021</h2>
           <button className='btn'
             onClick={() => { signInWithPopup(auth, provider) }}>
-            Start</button>
+            Sign In with Google</button>
         </>
         ) : (
           <>
