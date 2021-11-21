@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, doc, addDoc, setDoc, getDoc, getDocs, collection, updateDoc } from 'firebase/firestore'
+import { getFirestore, doc, addDoc, setDoc, getDoc, getDocs, collection, updateDoc, deleteDoc } from 'firebase/firestore'
 import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
@@ -46,11 +46,16 @@ const updateGroup = async (g) => {
   await updateDoc(doc(firestore, 'groups', g.id), g)
 }
 
-const joinGroup = async (g, uid) => {
+// DELETE group
+const deleteGroup = async (g) => {
+  await deleteDoc(doc(firestore, 'groups', g.id))
+}
+
+const joinGroup = async (g, u) => {
   let groupDoc = doc(firestore, 'groups', g.id)
   await updateDoc(groupDoc, {
-    members: [...g.members, { uid }]
+    members: [...g.members, JSON.parse(JSON.stringify(u))]
   })
 }
 
-export { auth, firestore, getGroups, getGroup, createGroup, updateGroup, joinGroup }
+export { auth, firestore, getGroups, getGroup, createGroup, updateGroup, joinGroup, deleteGroup }

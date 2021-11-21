@@ -18,15 +18,15 @@ export default function Home (props) {
     <div className='page home'>
       {!props.user ? (
         <>
-          <h1>Secret Santa</h1>
+          <h1 style={{ fontSize: '11vw' }}>Secret Santa</h1>
           <h2>2021</h2>
           <button className='btn'
             onClick={() => { signInWithPopup(auth, provider) }}>
-            Sign In with Google</button>
+            Login with Google</button>
         </>
         ) : (
           <>
-            <h1 style={{ margin: '0 auto'}}>{props.user.displayName}</h1>
+            <h1 style={{ fontSize: '11vw', marginBottom: '100px' }}>Welcome, Santa</h1>
 
             <Link to="/groups">
               <button className='btn'>Find a Group</button>

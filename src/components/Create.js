@@ -37,17 +37,21 @@ export default function Create (props) {
 
       <div className='input'>
         <label>
-          Group Name:
+          <h3>Group Name:</h3>
           <input id="groupName" ref={nameRef} className='code' />
         </label>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ display: 'inline', fontSize: '5vw', marginRight: '10px' }}>Private?</span>
-          <input type="checkbox" onChange={(e) => { togglePrivate(e.target.checked) }} style={{ width: '5vw', height: '5vw' }} />
+          <h3 style={{ marginRight: '15px' }}>Private?</h3>
+          <input type="checkbox"
+            onChange={(e) => { togglePrivate(e.target.checked) }}
+            style={{ width: '5vw', height: '5vw' }} />
         </div>
         {isPrivate ? (
           <>
-            <label for='privateCode'>{'Private group key (other players will use this to enter):'}</label>
-            <input id='privateCode' ref={codeRef} type="num" max="9999" />
+            <label for='privateCode'>
+              <h3>Secret code:</h3>
+            </label>
+            <input id='privateCode' ref={codeRef} type="text" maxlength="4" />
           </>
         ) : null}
       </div>

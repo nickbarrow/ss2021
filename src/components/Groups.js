@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { getGroups, joinGroup } from '../providers/firebase'
 import { Link, useNavigate } from "react-router-dom"
-import { BsFillArrowLeftCircleFill, BsPlusCircle, BsLockFill } from 'react-icons/bs'
+import { BsFillArrowLeftCircleFill, BsLockFill, BsShieldLock } from 'react-icons/bs'
 
 export default function Groups (props) {
   const navigate = useNavigate()
@@ -17,7 +17,7 @@ export default function Groups (props) {
   }, [])
 
   const joinPublicGroup = async (g) => {
-    await joinGroup(g, props.user.uid)
+    await joinGroup(g, props.user)
     navigate(`/group/${g.id}`)
   }
 
@@ -25,7 +25,7 @@ export default function Groups (props) {
     if (v === g.privateCode) {
       await joinGroup(g, props.user.uid)
       navigate(`/group/${g.id}`)
-    }
+    } else alert('Wrong code!')
   }
 
   return (
@@ -39,9 +39,9 @@ export default function Groups (props) {
 
       <div className='heading'>
         <h1>Groups</h1>
-        <div className='icon'>
+        <div className='right'>
           <Link to='/create'>
-            <BsPlusCircle />
+            <button className='btn'>Create</button>
           </Link>
         </div>
       </div>
@@ -49,14 +49,14 @@ export default function Groups (props) {
       {groups ? (
         groups.map((group, idx) => {
           return <div className='group' key={idx}>
-                    <span>{group.name}</span>
+                    <h3>{group.isPrivate ? <BsShieldLock /> : null} {group.name}</h3>
                     {group.members.some(m => m.uid == props.user.uid) ? ( // Already in group
                         <Link to={`/group/${group.id}`}>
                           <button className='btn'>View</button>
                         </Link>
                       ) : group.isPrivate ? ( // Join private group
                         <button className='btn' onClick={() => { toggleModal(true); setJoiningGroup(group) }}>
-                          <BsLockFill /> Join</button>
+                          Join</button>
                       ) : <button className='btn' onClick={() => { joinPublicGroup(group) }}>Join</button>  // Public group
                     }
                   </div>
@@ -66,7 +66,10 @@ export default function Groups (props) {
           <div className='spinner'></div>
         </div>
       )}
-      
+{/*       
+      <Link to='/create'>
+        <button className='btn'>Create New Group</button>
+      </Link> */}
 
       <div className={`modal ${modal ? 'active' : ''}`}>
         <div className='body'>

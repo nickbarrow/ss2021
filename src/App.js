@@ -22,7 +22,7 @@ export default function App () {
         </Routes>
       </div>
       <div className='footer'>
-        <p>Made with <span role='img'>❤️</span> in the cave</p>
+        <h4>Made with <span role='img'>❤️</span> in the cave</h4>
       </div>
     </>
   );

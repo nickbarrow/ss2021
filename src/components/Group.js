@@ -1,23 +1,31 @@
 import { useEffect, useState, useRef } from 'react'
-import { getGroup, updateGroup } from '../providers/firebase'
+import { getGroup, updateGroup, deleteGroup } from '../providers/firebase'
 import { Link, useParams } from "react-router-dom"
 import { BsFillArrowLeftCircleFill, BsShieldLock } from 'react-icons/bs'
 
 export default function Group (props) {
   var { groupId } = useParams()
   const [group, setGroup] = useState(null)
+  const [ugd, setUgd] = useState(null)  // User group data - data for this group
   const [showModal, toggleModal] = useState(false)
   var wantsRef = useRef(null)
   
   useEffect(() => {
+    // Self-invoking async hook
     (async () => {
-      let g = await getGroup(groupId),
-          userIdx = g.members.findIndex(m => m.uid === props.user.uid)
-
-      if (userIdx >= 0 && !g.members[userIdx].hasOwnProperty('wants'))
-        toggleModal(true)
+      let g = await getGroup(groupId),                          // Get group data
+          uig = g.members.find(m => m.uid === props.user.uid)   // Get user's data for this group
           
-      setGroup(g)      
+      setGroup(g)
+      setUgd(uig)
+          // userIdx = g.members.findIndex(m => m.uid === props.user.uid);
+
+      // // Get user data for current group
+      // uig = g[userIdx]
+
+      // Force user to enter wants if none specified yet.
+      if (!uig.hasOwnProperty('wants'))
+        toggleModal(true)
     })()
   }, [])
 
@@ -43,35 +51,48 @@ export default function Group (props) {
             <h1>{group.isPrivate ? <BsShieldLock /> : null}{group.name}</h1>
           </div>
     
+          {/* Remind members of access code, if private. */}
           {group.isPrivate ? (
-            <h2 style={{ fontSize: '6vw', fontWeight: '500' }}>Access Code:{group.privateCode}</h2>
+            <h2>Access Code:<span style={{ marginLeft: '15px', fontWeight: '300' }}>{group.privateCode}</span></h2>
           ) : null}
 
-          <h3 style={{ fontWeight: '300' }}>You asked Santa for:</h3>
-          {/* 
-          <textarea></textarea>
-          <button className='btn' onClick={() => { submitWants(wantsRef.current.value) }}>Submit</button> */}
+          
+          {ugd && 'wants' in ugd ? (
+            <>
+              <h2>You asked Santa for:</h2>
+              <ul><li>{ugd.wants}</li></ul>
+            </>
+          ) : null}
 
+          {/* Group creator info */}
           {group.members?.[0].uid === props.user.uid ? (
             <>
               <div className='members' style={{ marginTop: '20px' }}>
-                Group Members:
+                <h2>Group Members:</h2>
                 <ul>
                   {group.members.map((memberLol, idx) => {
+                    console.log(props.user)
                     return <li className='memberLol' key={idx}>{memberLol.displayName}</li>
                   })}
                 </ul>
               </div>
 
-              {/* <button className="btn">Draw Matches</button> */}
+              <button className='btn' style={{ marginTop: '100px' }}
+                onClick={async () => { await deleteGroup(group) }}>
+                Delete Group</button>
             </>
-          ) : null}
+          ) : (
+            // Regular group member info
+            <h2>That's it! You will be notified when your giftee is chosen!</h2>
+          )}
         </>
       ) : (
         <div className='loading'>
           <div className='spinner'></div>
         </div>
       )}
+
+      {/* Wants modal */}
       <div className={`modal ${showModal ? 'active' : ''}`}>
         <div className='body'>
           <h3>Add some items you'd like to receive:</h3>
