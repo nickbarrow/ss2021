@@ -73,7 +73,7 @@ export default function Groups (props) {
           <h3>Enter secret code:</h3>
           <input ref={privateGroupCodeInputRef} />
           <div className='btn-footer'>
-            <button onClick={() => { toggleModal(true); setJoiningGroup(null) }}>Cancel</button>
+            <button onClick={() => { toggleModal(false); setJoiningGroup(null) }}>Cancel</button>
             <button onClick={() => { joinPrivateGroup(joiningGroup, privateGroupCodeInputRef.current.value) }}>OK</button>
           </div>
         </div>

@@ -1,21 +1,31 @@
-import { useEffect, useState } from 'react'
-import { getGroup } from '../providers/firebase'
+import { useEffect, useState, useRef } from 'react'
+import { getGroup, updateGroup } from '../providers/firebase'
 import { Link, useParams } from "react-router-dom"
 import { BsFillArrowLeftCircleFill, BsShieldLock } from 'react-icons/bs'
 
 export default function Group (props) {
   var { groupId } = useParams()
-  const [group, loadGroup] = useState(null)
+  const [group, setGroup] = useState(null)
+  const [showModal, toggleModal] = useState(false)
+  var wantsRef = useRef(null)
   
   useEffect(() => {
     (async () => {
-      loadGroup(await getGroup(groupId)) })()
+      let g = await getGroup(groupId),
+          userIdx = g.members.findIndex(m => m.uid === props.user.uid)
+
+      if (userIdx >= 0 && !g.members[userIdx].hasOwnProperty('wants'))
+        toggleModal(true)
+          
+      setGroup(g)      
+    })()
   }, [])
 
-  const submitWants = (t) => {
+  const submitWants = async (t) => {
     let g = {...group},
-        tmpUD = g.members.find(m => m.uid === props.user.uid)
-        tmpUD.wants = t
+        userIdx = g.members.findIndex(m => m.uid === props.user.uid)
+    g.members[userIdx].wants = t
+    await updateGroup(g)
   }
 
   return (
@@ -37,9 +47,10 @@ export default function Group (props) {
             <h2 style={{ fontSize: '6vw', fontWeight: '500' }}>Access Code:{group.privateCode}</h2>
           ) : null}
 
-          <h3 style={{ fontWeight: '300' }}>To enter the drawing, add some items you'd like to receive:</h3>
+          <h3 style={{ fontWeight: '300' }}>You asked Santa for:</h3>
+          {/* 
           <textarea></textarea>
-          <button className='btn' onClick={() => { submitWants(wantsRef.current.value) }}>Submit</button>
+          <button className='btn' onClick={() => { submitWants(wantsRef.current.value) }}>Submit</button> */}
 
           {group.members?.[0].uid === props.user.uid ? (
             <>
@@ -47,12 +58,12 @@ export default function Group (props) {
                 Group Members:
                 <ul>
                   {group.members.map((memberLol, idx) => {
-                    return <div className='memberLol' key={idx}>{JSON.stringify(memberLol, null, 2)}</div>
+                    return <li className='memberLol' key={idx}>{memberLol.displayName}</li>
                   })}
                 </ul>
               </div>
 
-              <button className="btn">Draw Matches</button>
+              {/* <button className="btn">Draw Matches</button> */}
             </>
           ) : null}
         </>
@@ -61,6 +72,16 @@ export default function Group (props) {
           <div className='spinner'></div>
         </div>
       )}
+      <div className={`modal ${showModal ? 'active' : ''}`}>
+        <div className='body'>
+          <h3>Add some items you'd like to receive:</h3>
+          <textarea ref={wantsRef}></textarea>
+          <div className='btn-footer'>
+            <button onClick={() => { toggleModal(false) }}>Cancel</button>
+            <button onClick={async () => { await submitWants(wantsRef.current.value); toggleModal(false) }}>OK</button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

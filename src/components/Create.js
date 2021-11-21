@@ -15,7 +15,7 @@ export default function Create (props) {
       if(isPrivate && codeRef.current.value) p = { isPrivate: 'true', privateCode: codeRef.current.value }
       let docRef = await createGroup({
         name: nameRef.current.value,
-        members: [{ uid: props.user.uid }],
+        members: [JSON.parse(JSON.stringify(props.user))],
         ...p
       })
       navigate(`/group/${docRef.id}`)
@@ -38,7 +38,7 @@ export default function Create (props) {
       <div className='input'>
         <label>
           Group Name:
-          <input id="groupName" ref={nameRef} />
+          <input id="groupName" ref={nameRef} className='code' />
         </label>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ display: 'inline', fontSize: '5vw', marginRight: '10px' }}>Private?</span>

@@ -42,6 +42,10 @@ const getGroup = async (id) => {
 }
 
 // UPDATE group
+const updateGroup = async (g) => {
+  await updateDoc(doc(firestore, 'groups', g.id), g)
+}
+
 const joinGroup = async (g, uid) => {
   let groupDoc = doc(firestore, 'groups', g.id)
   await updateDoc(groupDoc, {
@@ -49,4 +53,4 @@ const joinGroup = async (g, uid) => {
   })
 }
 
-export { auth, firestore, getGroups, getGroup, createGroup, joinGroup }
+export { auth, firestore, getGroups, getGroup, createGroup, updateGroup, joinGroup }
