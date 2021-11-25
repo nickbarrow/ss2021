@@ -15,8 +15,22 @@ export default function Home (props) {
   })
 
   return (
-    <div className='page home'>
-      {!props.user ? (
+    <div className='home'>
+      {props.user ? (
+        <>
+          <h1 style={{ fontSize: '11vw' }}>Welcome, Santa</h1>
+          <h1 style={{ filter: 'none', margin: '50px 0' }}>🦌🦌🛷🎁</h1>
+
+          <Link to="/groups">
+            <button className='btn'>Find a Group</button>
+          </Link>
+          
+          <button className='btn trans'
+            style={{ marginTop: '20px' }}
+            onClick={() => { signOut(auth) }}>
+            Log Out</button>
+        </>
+      ) : (
         <>
           <h1 style={{ fontSize: '11vw' }}>Secret Santa</h1>
           <h2>2021</h2>
@@ -24,18 +38,6 @@ export default function Home (props) {
             onClick={() => { signInWithPopup(auth, provider) }}>
             Login with Google</button>
         </>
-        ) : (
-          <>
-            <h1 style={{ fontSize: '11vw', marginBottom: '100px' }}>Welcome, Santa</h1>
-
-            <Link to="/groups">
-              <button className='btn'>Find a Group</button>
-            </Link>
-            
-            <button className='btn trans'
-              onClick={() => { signOut(auth) }}>
-              Log Out</button>
-          </>
       )}
     </div>
   )

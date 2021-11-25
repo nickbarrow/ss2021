@@ -16,64 +16,88 @@ body {
   color: white;
   position: relative;
 }
-.App h1 {
-  overflow: hidden;
+
+h1 {
   line-height: 1;
   font-size: 11vw;
   margin: 0;
   width: fit-content;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.65));
 }
 @media (min-width: 992px) {
-  .App h1 {
+  h1 {
     font-size: 90px;
   }
 }
-.App h2 {
-  width: fit-content;
+
+h2 {
   margin: 0;
+  font-size: 5vw;
+  font-weight: 500;
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.65));
 }
-.App h3 {
+
+h3 {
   font-size: 1.8rem;
   margin: 0;
   font-weight: 500;
 }
-.App a {
+
+a {
   color: white;
   text-decoration: none;
   align-items: center;
   transition: all ease 0.2s;
 }
-.App a:hover {
+a:hover {
   opacity: 0.8;
 }
-.App a:visited, .App a:active, .App a:focus {
+a:visited, a:active, a:focus {
   color: white;
 }
-.App .heading {
-  font-size: 12vw;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  word-break: break-all;
-  margin-bottom: 50px;
-}
-.App .heading h1 {
+
+ul {
+  font-size: 5vw;
+  font-weight: 300;
+  list-style-type: circle;
   margin: 0;
+  padding: 0;
 }
-.App .heading h1 svg {
-  font-size: 8vw;
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  padding: 5%;
+  background-color: #9A2525;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.175);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.heading .back {
+  font-size: 4vw;
+  color: white;
+  margin-bottom: 12px;
+}
+.heading .back:hover span {
+  text-decoration: underline;
+}
+.heading .back a {
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.65));
+}
+.heading .back svg {
   margin-right: 10px;
 }
-.App .heading .right .btn {
-  position: relative;
-  top: 5px;
-  margin: 0;
-  font-size: 4vw;
-  padding: 5px 18px;
+.heading .title {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
-.App .btn {
+
+.btn {
   font-weight: 700;
   background-color: #FCFCFD;
   border-radius: 4px;
@@ -87,40 +111,39 @@ body {
   transition: box-shadow 0.15s, transform 0.15s;
   user-select: none;
   font-size: 5vw;
-  margin: 10px auto;
 }
-.App .btn:active {
+.btn:active {
   box-shadow: #D6D6E7 0 3px 7px inset;
   transform: translateY(2px);
 }
-.App .btn.trans {
+.btn.trans {
   background-color: transparent;
   color: #f3f3f3;
   box-shadow: none;
   font-weight: 500;
   text-decoration: underline;
 }
-.App .btn.sm {
+.btn.sm {
   font-size: 3vw;
   padding: 5px 10px;
 }
-.App .btn.inline {
+.btn.inline {
   display: inline-block;
   margin-left: 10px;
   margin-right: 10px;
 }
-.App .input {
-  margin: 10px 0;
+
+.input {
   width: 100%;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.65));
 }
-.App .input label {
+.input label {
   display: block;
   width: 100%;
   font-size: 3vw;
   font-weight: 100;
 }
-.App .input input {
+.input input {
   width: 100%;
   border: none;
   border-radius: 10px;
@@ -130,47 +153,34 @@ body {
   padding: 10px 15px;
 }
 
-.back {
-  font-size: 4vw;
-  color: white;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+.content {
+  padding: 5%;
 }
-.back:hover span {
-  text-decoration: underline;
-}
-@media (min-width: 992px) {
-  .back {
-    font-size: 30px;
-  }
-}
-.back a {
+
+.home {
+  padding-top: 100px;
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
-.back svg {
-  margin-right: 10px;
-}
-
-.page {
-  width: 90%;
-  margin: 0 auto;
-  padding-top: 100px;
-}
-
 .home h1 {
-  margin: 0 auto;
+  margin: 0;
+  width: fit-content;
 }
 .home h2 {
   color: rgba(255, 255, 255, 0.8);
-  margin: 0 auto 100px;
+  margin: 0 0 100px;
 }
 .home h2:after {
   content: "🎅";
   color: white;
 }
 
-.groups .group {
-  margin-top: 40px;
+.group-list :not(:first-child) {
+  border-top: 1px solid rgba(0, 0, 0, 0.25);
+}
+.group-list .group {
+  padding: 10px 0;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -178,10 +188,10 @@ body {
   justify-content: space-between;
   font-size: 4vw;
 }
-.groups .group h3 {
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+.group-list .group h3 {
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.65));
 }
-.groups .group .btn {
+.group-list .group .btn {
   font-size: 4vw;
   padding: 5px 15px;
   margin: 0;
@@ -212,7 +222,7 @@ body {
   border-radius: 10px;
   filter: blur(10px 10px);
   padding: 5vw 0 0 0;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.65));
 }
 .modal .body h3 {
   font-size: 2rem;
@@ -256,6 +266,79 @@ body {
   border-bottom-right-radius: 10px;
 }
 
+.wait-alert {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 0 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+.wait-alert span {
+  margin-right: 10px;
+  font-size: 8vw;
+}
+.wait-alert h2 {
+  font-size: 6vw;
+  font-weight: 500;
+}
+
+.recipient {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 35px auto;
+  width: 50%;
+  padding: 10px 0;
+  background: white;
+  color: black;
+  font-size: 6vw;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.4));
+  text-align: center;
+  border-radius: 2px;
+  border: 1px solid #bbb;
+  transform: rotate(0deg);
+  transition: all 0.9s ease;
+  opacity: 0;
+  user-select: none;
+}
+.recipient:hover {
+  transform: rotate(0deg) !important;
+}
+.recipient.active {
+  opacity: 1;
+  width: 75%;
+}
+.recipient.sm {
+  margin: 10px auto;
+  transition: none;
+  font-size: 5vw;
+}
+.recipient:before {
+  content: "";
+  width: 50%;
+  height: 100%;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.recipient:after {
+  content: "";
+  width: 50%;
+  height: 100%;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.recipient .wants-intro {
+  font-size: 3vw;
+  color: #a1a1a1;
+  font-style: italic;
+  font-weight: 300;
+}
+
 .footer {
   width: 100%;
   height: 10vh;
@@ -287,5 +370,13 @@ body {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

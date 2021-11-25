@@ -30,46 +30,45 @@ export default function Groups (props) {
 
   return (
     <div className='page groups'>
-      <div className='back'>
-        <Link to="/">
-          <BsFillArrowLeftCircleFill />
-          <span>Back to Home</span>
-        </Link>
-      </div>
-
       <div className='heading'>
-        <h1>Groups</h1>
-        <div className='right'>
+        <div className='back'>
+          <Link to="/">
+            <BsFillArrowLeftCircleFill />
+            <span>Back to Home</span>
+          </Link>
+        </div>
+        <div className='title'>
+          <h1>Groups</h1>
           <Link to='/create'>
-            <button className='btn'>Create</button>
+            <button className='btn' style={{ margin: '0 10px 0 0' }}>Create</button>
           </Link>
         </div>
       </div>
       
-      {groups ? (
-        groups.map((group, idx) => {
-          return <div className='group' key={idx}>
-                    <h3>{group.isPrivate ? <BsShieldLock /> : null} {group.name}</h3>
-                    {group.members.some(m => m.uid == props.user.uid) ? ( // Already in group
-                        <Link to={`/group/${group.id}`}>
-                          <button className='btn'>View</button>
-                        </Link>
-                      ) : group.isPrivate ? ( // Join private group
-                        <button className='btn' onClick={() => { toggleModal(true); setJoiningGroup(group) }}>
-                          Join</button>
-                      ) : <button className='btn' onClick={() => { joinPublicGroup(group) }}>Join</button>  // Public group
-                    }
-                  </div>
-        })
-      ) : (
-        <div className='loading'>
-          <div className='spinner'></div>
-        </div>
-      )}
-{/*       
-      <Link to='/create'>
-        <button className='btn'>Create New Group</button>
-      </Link> */}
+      <div className='content'>
+        {groups ? (
+          <div className='group-list'>
+            {groups.map((group, idx) => {
+              return <div className='group' key={idx}>
+                        <h3>{group.isPrivate ? <BsShieldLock /> : null} {group.name}</h3>
+                        {group.members.some(m => m.uid == props.user.uid) ? ( // Already in group
+                            <Link to={`/group/${group.id}`}>
+                              <button className='btn'>View</button>
+                            </Link>
+                          ) : group.isPrivate ? ( // Join private group
+                            <button className='btn' onClick={() => { toggleModal(true); setJoiningGroup(group) }}>
+                              Join</button>
+                          ) : <button className='btn' onClick={() => { joinPublicGroup(group) }}>Join</button>  // Public group
+                        }
+                      </div>
+            })}
+          </div>
+        ) : (
+          <div className='loading'>
+            <div className='spinner'></div>
+          </div>
+        )}
+      </div>
 
       <div className={`modal ${modal ? 'active' : ''}`}>
         <div className='body'>

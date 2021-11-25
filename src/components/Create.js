@@ -23,40 +23,43 @@ export default function Create (props) {
   }
 
   return (
-    <div className='page groups'>
-      <div className='back'>
-        <Link to="/groups">
-          <BsFillArrowLeftCircleFill />
-          <span>Back to Groups</span>
-        </Link>
-      </div>
-
+    <div className='groups'>
       <div className='heading'>
-        <h1>Create</h1>
-      </div>
-
-      <div className='input'>
-        <label>
-          <h3>Group Name:</h3>
-          <input id="groupName" ref={nameRef} className='code' />
-        </label>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h3 style={{ marginRight: '15px' }}>Private?</h3>
-          <input type="checkbox"
-            onChange={(e) => { togglePrivate(e.target.checked) }}
-            style={{ width: '5vw', height: '5vw' }} />
+        <div className='back'>
+          <Link to="/groups">
+            <BsFillArrowLeftCircleFill />
+            <span>Back to Groups</span>
+          </Link>
         </div>
-        {isPrivate ? (
-          <>
-            <label for='privateCode'>
-              <h3>Secret code:</h3>
-            </label>
-            <input id='privateCode' ref={codeRef} type="text" maxlength="4" />
-          </>
-        ) : null}
+        <div className='title'>
+          <h1>Create</h1>
+        </div>
       </div>
 
-      <button className='btn' onClick={create}>Go</button>
+      <div className='content'>
+        <div className='input'>
+          <label>
+            <h3>Group Name:</h3>
+            <input id="groupName" ref={nameRef} className='code' />
+          </label>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <h3 style={{ marginRight: '15px' }}>Private?</h3>
+            <input type="checkbox"
+              onChange={(e) => { togglePrivate(e.target.checked) }}
+              style={{ width: '5vw', height: '5vw' }} />
+          </div>
+          {isPrivate ? (
+            <>
+              <label for='privateCode'>
+                <h3>Secret code:</h3>
+              </label>
+              <input id='privateCode' ref={codeRef} type="text" maxlength="4" />
+            </>
+          ) : null}
+        </div>
+
+        <button className='btn' style={{ marginTop: '50px' }} onClick={create}>Create</button>
+      </div>
     </div>
   )
 }

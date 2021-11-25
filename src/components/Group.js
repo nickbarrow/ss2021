@@ -2,30 +2,29 @@ import { useEffect, useState, useRef } from 'react'
 import { getGroup, updateGroup, deleteGroup } from '../providers/firebase'
 import { Link, useParams } from "react-router-dom"
 import { BsFillArrowLeftCircleFill, BsShieldLock } from 'react-icons/bs'
+import { makePairs, sleep } from '../utils'
 
 export default function Group (props) {
   var { groupId } = useParams()
   const [group, setGroup] = useState(null)
-  const [ugd, setUgd] = useState(null)  // User group data - data for this group
   const [showModal, toggleModal] = useState(false)
+  const [nameRotAngle, setNameRotAngle] = useState(null)
   var wantsRef = useRef(null)
+
+  const loadGroupData = async () => {
+    let g = await getGroup(groupId)
+    setGroup(g)
+    // Force user to enter wants if none specified yet.
+    if (!g.members[g.members.findIndex(m => m.uid === props.user.uid)].hasOwnProperty('wants'))
+      toggleModal(true)
+  }
   
   useEffect(() => {
     // Self-invoking async hook
     (async () => {
-      let g = await getGroup(groupId),                          // Get group data
-          uig = g.members.find(m => m.uid === props.user.uid)   // Get user's data for this group
-          
-      setGroup(g)
-      setUgd(uig)
-          // userIdx = g.members.findIndex(m => m.uid === props.user.uid);
-
-      // // Get user data for current group
-      // uig = g[userIdx]
-
-      // Force user to enter wants if none specified yet.
-      if (!uig.hasOwnProperty('wants'))
-        toggleModal(true)
+      await loadGroupData()
+      await sleep(100)
+      setNameRotAngle(Math.floor(Math.random()*5)-2)
     })()
   }, [])
 
@@ -36,61 +35,98 @@ export default function Group (props) {
     await updateGroup(g)
   }
 
+  const generateMatches = async (g) => {
+    let groupCopy = {...g}        // Clone group data
+    groupCopy.matches = makePairs(g.members)
+    await updateGroup(groupCopy)  // Update DB
+    await loadGroupData()         // Reload group data
+  }
+
   return (
-    <div className='page groups'>
-      <div className='back'>
-        <Link to="/groups">
-          <BsFillArrowLeftCircleFill />
-          <span>Back to Groups</span>
-        </Link>
+    <div className='page group'>
+      <div className='heading' style={{ marginBottom: '10px' }}>
+        <div className='back'>
+          <Link to="/groups">
+            <BsFillArrowLeftCircleFill />
+            <span>Back to Groups</span>
+          </Link>
+        </div>
+        {group ? (
+          <div className='title'>
+            {group.isPrivate ? <BsShieldLock /> : null}
+            <h1>{group.name}</h1>
+          </div>
+        ) : null}
       </div>
 
-      {group ? (
-        <>
-          <div className='heading'>
-            <h1>{group.isPrivate ? <BsShieldLock /> : null}{group.name}</h1>
-          </div>
-    
-          {/* Remind members of access code, if private. */}
-          {group.isPrivate ? (
-            <h2>Access Code:<span style={{ marginLeft: '15px', fontWeight: '300' }}>{group.privateCode}</span></h2>
-          ) : null}
-
-          
-          {ugd && 'wants' in ugd ? (
-            <>
-              <h2>You asked Santa for:</h2>
-              <ul><li>{ugd.wants}</li></ul>
-            </>
-          ) : null}
-
-          {/* Group creator info */}
-          {group.members?.[0].uid === props.user.uid ? (
-            <>
-              <div className='members' style={{ marginTop: '20px' }}>
-                <h2>Group Members:</h2>
-                <ul>
-                  {group.members.map((memberLol, idx) => {
-                    console.log(props.user)
-                    return <li className='memberLol' key={idx}>{memberLol.displayName}</li>
-                  })}
-                </ul>
+      <div className='content'>
+        {group ? (
+          <>
+            {/* If group matches have been made, show current users recipient. */}
+            {'matches' in group ? (
+              <>
+                <h2>You are getting a present for:</h2>
+                <div className={`recipient ${nameRotAngle !== null ? 'active' : ''}`} style={{ transform: `rotate(${nameRotAngle}deg)` }}>
+                  <span>{group.matches[group.matches.findIndex(p => p.santa.uid === props.user.uid)].recipient.displayName}</span>
+                  <span>•</span>
+                  <span className='wants-intro'>they would like</span>
+                  <span>{group.matches[group.matches.findIndex(p => p.santa.uid === props.user.uid)].recipient.wants}</span>
+                </div>
+              </>
+            ) : group.members?.[0].uid !== props.user.uid ? (
+              <div className='wait-alert'>
+                <span role='img'>⚠️</span>
+                <h2>Wait for the group owner to make matches.</h2>
               </div>
+            ) : null}
+      
+            {/* Remind members of access code, if private. */}
+            {group.isPrivate ? (
+              <h2 style={{ marginBottom: '20px' }}>Access Code:<span style={{ marginLeft: '15px', fontWeight: '300' }}>
+                {group.privateCode}</span></h2>
+            ) : null}
 
-              <button className='btn' style={{ marginTop: '100px' }}
-                onClick={async () => { await deleteGroup(group) }}>
-                Delete Group</button>
-            </>
-          ) : (
-            // Regular group member info
-            <h2>That's it! You will be notified when your giftee is chosen!</h2>
-          )}
-        </>
-      ) : (
-        <div className='loading'>
-          <div className='spinner'></div>
-        </div>
-      )}
+            {/* If user has entered wants, show. */}
+            {group.members[group.members.findIndex(m => m.uid === props.user.uid)].hasOwnProperty('wants') ? (
+              <>
+                <h2>You asked Santa for:</h2>
+                <ul><li className='recipient active sm' style={{ fontFamily: 'Caveat' }}>
+                  {group.members[group.members.findIndex(m => m.uid === props.user.uid)].wants}
+                </li></ul>
+              </>
+            ) : null}
+
+            {/* Group creator info */}
+            {group.members?.[0].uid === props.user.uid ? (
+              <>
+                <div className='members' style={{ marginTop: '20px' }}>
+                  <h2>Group Members:</h2>
+                  <ul>
+                    {group.members.map((memberLol, idx) => {
+                      return <li className='memberLol recipient active sm' style={{ fontFamily: 'Caveat' }} key={idx}>{memberLol.displayName}</li>
+                    })}
+                  </ul>
+                </div>
+
+                {group.members.length > 1 && !group.hasOwnProperty('matches') ? (
+                  <button className='btn' style={{ margin: '100px auto 20px' }}
+                    onClick={async () => { generateMatches(group) }}>
+                    Generate Matches</button>
+                ) : null}
+
+                {/* <button className='btn' style={{ marginTop: '100px' }}
+                  onClick={async () => { await deleteGroup(group) }}>
+                  Delete Group</button> */}
+              </>
+            ) : null}
+          </>
+        ) : (
+          <div className='loading'>
+            <div className='spinner'></div>
+          </div>
+        )}
+      </div>
+
 
       {/* Wants modal */}
       <div className={`modal ${showModal ? 'active' : ''}`}>
