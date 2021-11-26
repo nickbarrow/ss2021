@@ -130,8 +130,9 @@ export default function Group (props) {
                     Generate Matches</button>
                 ) : null}
 
-                <button className='btn' style={{ margin: '50px auto 20px', backgroundColor: '#e76c6c', color: 'white', boxShadow: 'none' }}
+                <button className='btn' style={{ margin: '50px auto 20px', backgroundColor: 'transparent', color: 'white', boxShadow: 'none', border: '2px solid white' }}
                   onClick={async () => {
+                    if (confirm(`Are you sure you want to delete '${group.name}' group?`))
                     await deleteGroup(group)
                     navigate('/groups')
                   }}>

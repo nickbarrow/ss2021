@@ -1,13 +1,13 @@
 // Thanks to user Mitya on StackOverflow (https://stackoverflow.com/questions/61137952/i-have-two-matching-arrays-how-can-i-pair-the-values-without-two-same-values-be)
 export const makePairs = (players) => {
   // Make hat from players and shuffle.
-  let hat = [...players]
-  hat.sort(() => Math.floor(Math.random() * 2))
+  let hat = [...players];
+  hat.sort(() => .5 - Math.random())
 
   // For each player pull a name.
   let pairs = players.map(picker => {
     // Pick off the "top", unless its the picker, then pick the next one
-    let hatIdx = hat[0] !== picker ? 0 : 1
+    let hatIdx = hat[0].uid !== picker.uid ? 0 : 1
     let choice = hat[hatIdx]
     // If there is no "next one", pick self
     if (!choice) choice = picker
@@ -18,7 +18,7 @@ export const makePairs = (players) => {
 
   // Check if the final pair is same user, swap first and last recipients if so.
   let final_pair = pairs[pairs.length-1];
-  if (final_pair.santa === final_pair.recipient) {
+  if (final_pair.santa.uid === final_pair.recipient.uid) {
     let tmp = final_pair.recipient
     final_pair.recipient = pairs[0].recipient
     pairs[0].recipient = tmp
