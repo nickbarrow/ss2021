@@ -2,10 +2,8 @@ import { initializeApp } from "firebase/app"
 import { getFirestore, doc, addDoc, setDoc, getDoc, getDocs, collection, updateDoc, deleteDoc } from 'firebase/firestore'
 import { getAuth } from "firebase/auth"
 
-console.log('test: ', process.env.REACT_APP_TEST)
-
 const firebaseConfig = {
-  apiKey: "AIzaSyB0FX4zHBFyGVgcDsB6r1IB8-X-KEIS4XI",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "ss2021-ae6c1.firebaseapp.com",
   projectId: "ss2021-ae6c1",
   storageBucket: "ss2021-ae6c1.appspot.com",
