@@ -23,6 +23,7 @@ export default function App () {
       </div>
       <div className='footer'>
         <h4>Made with <span role='img'>❤️</span> in the cave</h4>
+        <span className='copy'>©️ Nick Barrow 2021</span>
       </div>
     </>
   );

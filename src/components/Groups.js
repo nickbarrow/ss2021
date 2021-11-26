@@ -37,7 +37,7 @@ export default function Groups (props) {
             <span>Back to Home</span>
           </Link>
         </div>
-        <div className='title'>
+        <div className='title' style={{ justifyContent: 'space-between' }}>
           <h1>Groups</h1>
           <Link to='/create'>
             <button className='btn' style={{ margin: '0 10px 0 0' }}>Create</button>

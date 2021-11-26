@@ -1,4 +1,5 @@
 $lightDropShadow: drop-shadow(0 0 8px rgba(0, 0, 0, 0.65));
+$bgColor: rgb(155, 37, 37);
 
 * { box-sizing: border-box; }
 
@@ -11,7 +12,7 @@ body {
 .App {
   width: 100%;
   min-height: 90vh;
-  background-color: rgb(155, 37, 37);
+  background-color: $bgColor;
   color: white;
   position: relative;
 }
@@ -59,8 +60,10 @@ ul {
   display: flex;
   flex-direction: column;
   padding: 5%;
-  background-color: #9A2525;
+  background-color: rgba(155, 37, 37, 0.95);
+  backdrop-filter: blur(5px);
   box-shadow: 0 3px 10px rgba(0,0,0,.175);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -83,8 +86,17 @@ ul {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    // justify-content: space-between;
     // margin-top: 10px;
+
+    h1 {
+      white-space: break-word;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -153,14 +165,6 @@ ul {
   }
 }
 
-// .page {
-//   // width: 90%;
-//   // padding: 20px 5% 0;
-//   margin: 0 auto;
-//   // padding-top: 100px;
-//   overflow: auto;
-
-// }
 .content {
   padding: 5%;
 }
@@ -307,7 +311,7 @@ ul {
   flex-direction: column;
   align-items: center;
   margin: 35px auto;
-  width: 50%;
+  // width: 70%;
   padding: 10px 0;
   background: white;
   color: black;
@@ -371,11 +375,25 @@ ul {
 
 .footer {
   width: 100%;
-  height: 10vh;
+  min-height: 10vh;
   text-align: center;
   font-family: inherit;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.7);
+
+  h4 {
+    margin: 10px 0 0;
+    font-weight: 500;
+  }
+
+  .copy {
+    margin: 5px 0 10px;
+    font-size: 2vw;
+    opacity: 0.65;
+    font-weight: 100;
+  }
 }
 
 .loading {

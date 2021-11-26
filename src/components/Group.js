@@ -53,7 +53,11 @@ export default function Group (props) {
         </div>
         {group ? (
           <div className='title'>
-            {group.isPrivate ? <BsShieldLock /> : null}
+            {group.isPrivate ? (
+              <div style={{ width: '10%', paddingRight: '10px' }}>
+                <BsShieldLock />
+              </div>
+            ) : null}
             <h1>{group.name}</h1>
           </div>
         ) : null}
