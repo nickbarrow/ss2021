@@ -23,7 +23,7 @@ export default function Groups (props) {
 
   const joinPrivateGroup = async (g, v) => {
     if (v === g.privateCode) {
-      await joinGroup(g, props.user.uid)
+      await joinGroup(g, props.user)
       navigate(`/group/${g.id}`)
     } else alert('Wrong code!')
   }

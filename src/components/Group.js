@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { getGroup, updateGroup, deleteGroup } from '../providers/firebase'
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import { BsFillArrowLeftCircleFill, BsShieldLock } from 'react-icons/bs'
 import { makePairs, sleep } from '../utils'
 
@@ -10,6 +10,7 @@ export default function Group (props) {
   const [showModal, toggleModal] = useState(false)
   const [nameRotAngle, setNameRotAngle] = useState(null)
   var wantsRef = useRef(null)
+  const navigate = useNavigate()
 
   const loadGroupData = async () => {
     let g = await getGroup(groupId)
@@ -69,13 +70,19 @@ export default function Group (props) {
             {/* If group matches have been made, show current users recipient. */}
             {'matches' in group ? (
               <>
-                <h2>You are getting a present for:</h2>
-                <div className={`recipient ${nameRotAngle !== null ? 'active' : ''}`} style={{ transform: `rotate(${nameRotAngle}deg)` }}>
-                  <span>{group.matches[group.matches.findIndex(p => p.santa.uid === props.user.uid)].recipient.displayName}</span>
-                  <span>•</span>
-                  <span className='wants-intro'>they would like</span>
-                  <span>{group.matches[group.matches.findIndex(p => p.santa.uid === props.user.uid)].recipient.wants}</span>
-                </div>
+                {group.matches.some(m => m.santa.uid === props.user.uid || m.recipient.uid === props.user.uid) ? (
+                  <>
+                    <h2>You are getting a present for:</h2>
+                    <div className={`recipient ${nameRotAngle !== null ? 'active' : ''}`} style={{ transform: `rotate(${nameRotAngle}deg)` }}>
+                      <span>{group.matches[group.matches.findIndex(p => p.santa.uid === props.user.uid)].recipient.displayName}</span>
+                      <span>•</span>
+                      <span className='wants-intro'>they would like</span>
+                      <span>{group.matches[group.matches.findIndex(p => p.santa.uid === props.user.uid)].recipient.wants}</span>
+                    </div>
+                  </>
+                ) : (
+                  <h2>You have joined a group that has already picked matches.</h2>
+                )}
               </>
             ) : group.members?.[0].uid !== props.user.uid ? (
               <div className='wait-alert'>
@@ -112,15 +119,23 @@ export default function Group (props) {
                   </ul>
                 </div>
 
-                {group.members.length > 1 && !group.hasOwnProperty('matches') ? (
+                {group.members.length > 1 ? (
                   <button className='btn' style={{ margin: '100px auto 20px' }}
-                    onClick={async () => { generateMatches(group) }}>
+                    onClick={async () => {
+                      if (group.hasOwnProperty('matches')) {
+                        if (confirm('Matches have already been made. Are you sure you want to repick matches?'))
+                          await generateMatches(group)
+                      } else await generateMatches(group)
+                    }}>
                     Generate Matches</button>
                 ) : null}
 
-                {/* <button className='btn' style={{ marginTop: '100px' }}
-                  onClick={async () => { await deleteGroup(group) }}>
-                  Delete Group</button> */}
+                <button className='btn' style={{ margin: '50px auto 20px', backgroundColor: '#e76c6c', color: 'white', boxShadow: 'none' }}
+                  onClick={async () => {
+                    await deleteGroup(group)
+                    navigate('/groups')
+                  }}>
+                  Delete Group</button>
               </>
             ) : null}
           </>
