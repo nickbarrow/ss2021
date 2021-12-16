@@ -291,7 +291,7 @@ ul {
   flex-direction: column;
   align-items: center;
   margin: 35px auto;
-  padding: 10px 0;
+  padding: 10px;
   background: white;
   color: black;
   font-size: 6vw;
@@ -302,15 +302,15 @@ ul {
   transform: rotate(0deg);
   transition: all 0.9s ease;
   opacity: 0;
-  user-select: none;
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+  word-wrap: anywhere;
 }
 .recipient:hover {
   transform: rotate(0deg) !important;
 }
 .recipient.active {
   opacity: 1;
-  width: 75%;
+  width: 85%;
 }
 .recipient.sm {
   margin: 10px auto;
